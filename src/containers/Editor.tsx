@@ -760,19 +760,32 @@ function computeFramebufLayout(args: {
   let divWidth = canvasWidth * ws;
   let divHeight = canvasHeight * ws;
 
-  const fitWidth = args.canvasFit == 'fitWidth';
-  if (fitWidth) {
-    if (divHeight > maxHeight) {
-      divHeight = maxHeight;
-    }
-  } else {
-    // If height is now larger than what we can fit in vertically, scale further
-    if (divHeight > maxHeight) {
+
+  switch(args.canvasFit)
+  {
+    case 'fitWidth':
+      if (divHeight > maxHeight) {
+        divHeight = maxHeight;
+        }
+        break;
+    case 'fitWidthHeight':
+      if (divHeight > maxHeight) {
+        const s = maxHeight  / divHeight;
+        divWidth *= s;
+        divHeight *= s;
+        ws *= s;
+      }
+      break;
+      case 'fitHeight':
+        if (divWidth > maxWidth) {
+          divWidth = maxWidth;
+        }
+        break;
+    case 'fitHeightWidth':
       const s = maxHeight  / divHeight;
-      divWidth *= s;
       divHeight *= s;
       ws *= s;
-    }
+      break;
   }
 
   return {
